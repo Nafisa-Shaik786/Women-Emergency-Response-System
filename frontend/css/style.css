@@ -1,0 +1,1203 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+:root {
+
+    --pink: #ee8fc1;
+
+    --pink-light: #fff1f8;
+
+    --pink-middle: #f5b5d6;
+
+    --red: #e5222a;
+
+    --green: #65e34d;
+
+    --yellow: #ffdc4d;
+
+    --purple: #ad3b78;
+
+    --purple-dark: #76236f;
+
+    --white: #ffffff;
+
+    --black: #111111;
+
+}
+
+
+body {
+
+    min-height: 100vh;
+
+    background: #202020;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    display: flex;
+
+    justify-content: center;
+
+}
+
+
+.app {
+
+    width: 100%;
+
+    max-width: 480px;
+
+    min-height: 100vh;
+
+    position: relative;
+
+    overflow-x: hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ee8fc1 0%,
+            #f3afd2 42%,
+            #fff2f9 100%
+        );
+
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    padding: 35px 25px 0;
+
+}
+
+
+.location-section {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.location-label {
+
+    color: #d74b76;
+
+    font-size: 15px;
+
+    margin-bottom: 5px;
+
+}
+
+
+.location {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+}
+
+
+.location-pin {
+
+    color: #ed4e68;
+
+    font-size: 14px;
+
+}
+
+
+.profile-avatar {
+
+    width: 58px;
+
+    height: 58px;
+
+    background: white;
+
+    border-radius: 50%;
+
+    border: 5px solid rgba(255,255,255,0.85);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 30px;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================
+   HOME
+========================= */
+
+.main {
+
+    padding: 20px 25px 130px;
+
+}
+
+
+.safety-card {
+
+    width: 265px;
+
+    height: 170px;
+
+    margin: 45px auto 0;
+
+    border-radius: 30px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-size: 43px;
+
+    font-weight: 800;
+
+    border: 3px solid rgba(0,0,0,0.25);
+
+    box-shadow:
+        0 4px 7px rgba(0,0,0,0.15);
+
+}
+
+
+.low-status {
+
+    background: var(--green);
+
+}
+
+
+.high-status {
+
+    background: var(--yellow);
+
+    display: none;
+
+}
+
+
+.status-buttons {
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 14px;
+
+    margin-top: 25px;
+
+}
+
+
+.status-button {
+
+    border: none;
+
+    padding: 13px 27px;
+
+    border-radius: 25px;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 3px 6px rgba(0,0,0,0.15);
+
+}
+
+
+.low-button {
+
+    background: var(--green);
+
+}
+
+
+.high-button {
+
+    background: var(--yellow);
+
+}
+
+
+.emergency-information {
+
+    margin-top: 48px;
+
+    padding: 0 5px;
+
+}
+
+
+.emergency-information p {
+
+    font-size: 15px;
+
+    margin-bottom: 16px;
+
+    line-height: 1.4;
+
+}
+
+
+.emergency-information strong {
+
+    font-weight: 800;
+
+}
+
+
+.protect-button {
+
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding: 17px;
+
+    border: none;
+
+    border-radius: 30px;
+
+    background: var(--red);
+
+    color: white;
+
+    font-size: 20px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 8px rgba(0,0,0,0.18);
+
+}
+
+
+/* =========================
+   BOTTOM NAVIGATION
+========================= */
+
+.bottom-navigation {
+
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 18px;
+
+    transform: translateX(-50%);
+
+    width: min(92%, 440px);
+
+    height: 72px;
+
+    background: #e3e3e3;
+
+    border-radius: 40px;
+
+    display: flex;
+
+    justify-content: space-around;
+
+    align-items: center;
+
+    z-index: 100;
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,0.15);
+
+}
+
+
+.nav-item {
+
+    border: none;
+
+    background: transparent;
+
+    color: #ca292f;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 4px;
+
+    font-size: 12px;
+
+    cursor: pointer;
+
+}
+
+
+.nav-icon {
+
+    font-size: 27px;
+
+    line-height: 1;
+
+}
+
+
+.nav-item.active {
+
+    font-weight: 700;
+
+}
+
+
+/* =========================
+   AUTH PAGES
+========================= */
+
+.auth-page {
+
+    padding: 0 25px;
+
+}
+
+
+.auth-title {
+
+    text-align: center;
+
+    font-family: Georgia, serif;
+
+    font-size: 36px;
+
+    margin:
+
+        65px
+
+        0
+
+        45px;
+
+}
+
+
+.input {
+
+    width: 100%;
+
+    border: none;
+
+    outline: none;
+
+    background: white;
+
+    border-radius: 30px;
+
+    padding: 18px 22px;
+
+    font-size: 17px;
+
+    margin-bottom: 14px;
+
+}
+
+
+.auth-button {
+
+    width: 100%;
+
+    border: none;
+
+    border-radius: 30px;
+
+    padding: 17px;
+
+    background: #fbeaf5;
+
+    color: #777;
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    box-shadow:
+        0 4px 5px rgba(0,0,0,0.15);
+
+    cursor: pointer;
+
+}
+
+
+.auth-text {
+
+    text-align: center;
+
+    font-size: 17px;
+
+    margin-top: 22px;
+
+}
+
+
+.link {
+
+    color: #7b245f;
+
+    cursor: pointer;
+
+    font-weight: 600;
+
+}
+
+
+/* =========================
+   PAGE HEADER
+========================= */
+
+.page-header {
+
+    display: grid;
+
+    grid-template-columns: 55px 1fr 55px;
+
+    align-items: center;
+
+    padding: 25px 20px;
+
+}
+
+
+.page-header h1 {
+
+    text-align: center;
+
+    font-size: 27px;
+
+    font-weight: 400;
+
+}
+
+
+.back-button {
+
+    width: 48px;
+
+    height: 48px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.45);
+
+    font-size: 28px;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================
+   CONTACTS
+========================= */
+
+.contacts-page {
+
+    padding:
+
+        20px
+
+        35px
+
+        120px;
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 28px 35px;
+
+}
+
+
+.contact-card {
+
+    height: 120px;
+
+    border-radius: 18px;
+
+    border: 3px solid var(--purple-dark);
+
+    background: var(--purple);
+
+    color: white;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+}
+
+
+.add-contact {
+
+    background: #c77aa7;
+
+    font-size: 42px;
+
+}
+
+
+/* =========================
+   VIDEOS
+========================= */
+
+.videos-page {
+
+    padding:
+
+        0
+
+        20px
+
+        120px;
+
+}
+
+
+.search-box {
+
+    background: white;
+
+    border-radius: 30px;
+
+    padding: 13px 18px;
+
+    display: flex;
+
+    gap: 10px;
+
+    align-items: center;
+
+    margin-bottom: 18px;
+
+}
+
+
+.search-box input {
+
+    border: none;
+
+    outline: none;
+
+    width: 100%;
+
+    font-size: 16px;
+
+}
+
+
+.video-card {
+
+    background: #111;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    margin-bottom: 18px;
+
+    color: white;
+
+}
+
+
+.video-thumbnail {
+
+    height: 190px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e9a8c9,
+            #d95183
+        );
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 65px;
+
+}
+
+
+.video-info {
+
+    padding: 15px;
+
+}
+
+
+.video-info h3 {
+
+    font-size: 16px;
+
+    margin-bottom: 7px;
+
+}
+
+
+.video-info p {
+
+    font-size: 13px;
+
+    color: #aaa;
+
+}
+
+
+/* =========================
+   MAP
+========================= */
+
+.map-page {
+
+    padding:
+
+        0
+
+        20px
+
+        120px;
+
+}
+
+
+.map {
+
+    height: 650px;
+
+    border-radius: 28px;
+
+    overflow: hidden;
+
+    position: relative;
+
+    background:
+        linear-gradient(
+            35deg,
+            transparent 47%,
+            white 48%,
+            white 50%,
+            transparent 51%
+        ),
+        linear-gradient(
+            115deg,
+            transparent 46%,
+            white 47%,
+            white 49%,
+            transparent 50%
+        ),
+        repeating-linear-gradient(
+            12deg,
+            #eacfd9 0 45px,
+            #f5dfe7 45px 90px
+        );
+
+}
+
+
+.park {
+
+    position: absolute;
+
+    background: #c6d586;
+
+    border-radius: 30px;
+
+}
+
+
+.park-one {
+
+    width: 60%;
+
+    height: 28%;
+
+    right: -10%;
+
+    top: 5%;
+
+}
+
+
+.park-two {
+
+    width: 35%;
+
+    height: 25%;
+
+    left: -5%;
+
+    bottom: 7%;
+
+}
+
+
+.map-marker {
+
+    position: absolute;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    font-weight: 700;
+
+}
+
+
+.map-marker span {
+
+    background: white;
+
+    padding: 3px 7px;
+
+    border-radius: 10px;
+
+}
+
+
+.map-marker b {
+
+    font-size: 28px;
+
+}
+
+
+.mom-marker {
+
+    top: 27%;
+
+    left: 40%;
+
+}
+
+
+.you-marker {
+
+    bottom: 13%;
+
+    right: 28%;
+
+}
+
+
+.map-controls {
+
+    position: absolute;
+
+    bottom: 20px;
+
+    left: 18px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+
+}
+
+
+.map-controls button {
+
+    width: 45px;
+
+    height: 45px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: white;
+
+    font-size: 22px;
+
+    color: #9b397c;
+
+}
+
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile-page {
+
+    padding:
+
+        35px
+
+        20px
+
+        120px;
+
+}
+
+
+.profile-card {
+
+    background: white;
+
+    border-radius: 28px;
+
+    overflow: hidden;
+
+}
+
+
+.large-avatar {
+
+    width: 105px;
+
+    height: 105px;
+
+    margin: -20px auto 10px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    border: 6px solid white;
+
+    box-shadow:
+        0 2px 8px rgba(0,0,0,0.25);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 55px;
+
+}
+
+
+.verified {
+
+    text-align: center;
+
+    color: #4e9c6d;
+
+    font-size: 20px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #eee;
+
+}
+
+
+.profile-detail {
+
+    display: grid;
+
+    grid-template-columns: 125px 1fr;
+
+    padding: 14px 18px;
+
+    font-size: 16px;
+
+}
+
+
+.completed {
+
+    color: #4e9c6d;
+
+}
+
+
+.edit-profile {
+
+    width: 100%;
+
+    border: none;
+
+    border-top: 1px solid #eee;
+
+    background: white;
+
+    padding: 22px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    font-size: 17px;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+.settings-page {
+
+    padding:
+
+        10px
+
+        20px
+
+        120px;
+
+}
+
+
+.settings-container,
+.logout-container {
+
+    background: white;
+
+    border-radius: 25px;
+
+    overflow: hidden;
+
+}
+
+
+.setting-item {
+
+    min-height: 70px;
+
+    padding: 20px;
+
+    border-bottom: 1px solid #eee;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    font-size: 18px;
+
+    cursor: pointer;
+
+}
+
+
+.setting-item:last-child {
+
+    border-bottom: none;
+
+}
+
+
+.logout-container {
+
+    margin-top: 60px;
+
+}
+
+
+.logout-icon {
+
+    color: #42b76e;
+
+}
+
+
+/* =========================
+   SOS
+========================= */
+
+.sos-body {
+
+    background: black;
+
+}
+
+
+.sos-screen {
+
+    width: 100%;
+
+    max-width: 480px;
+
+    min-height: 100vh;
+
+    background: black;
+
+    color: white;
+
+    padding: 25px;
+
+    text-align: center;
+
+}
+
+
+.sos-top {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    font-size: 14px;
+
+}
+
+
+.sos-screen h1 {
+
+    margin-top: 210px;
+
+    font-size: 29px;
+
+}
+
+
+.sos-image {
+
+    font-size: 85px;
+
+    margin: 25px 0;
+
+}
+
+
+.microphone-button {
+
+    width: 55px;
+
+    height: 55px;
+
+    border-radius: 50%;
+
+    border: none;
+
+    background: #eeeeee;
+
+    font-size: 25px;
+
+    cursor: pointer;
+
+}
+
+
+#sosMessage {
+
+    color: #aaa;
+
+    margin-top: 25px;
+
+    font-size: 14px;
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 380px) {
+
+    .header {
+
+        padding-left: 18px;
+
+        padding-right: 18px;
+
+    }
+
+
+    .main {
+
+        padding-left: 18px;
+
+        padding-right: 18px;
+
+    }
+
+
+    .safety-card {
+
+        width: 245px;
+
+        height: 155px;
+
+        font-size: 36px;
+
+    }
+
+
+    .contacts-page {
+
+        padding-left: 20px;
+
+        padding-right: 20px;
+
+        gap: 18px;
+
+    }
+
+
+    .contact-card {
+
+        height: 105px;
+
+        font-size: 18px;
+
+    }
+
+}

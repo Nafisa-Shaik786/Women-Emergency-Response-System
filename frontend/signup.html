@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sign Up - Women Safety</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="auth-container">
+
+        <div class="auth-card">
+
+            <div class="auth-header">
+                <h1>Welcome</h1>
+                <p>Create your account</p>
+            </div>
+
+            <form id="signupForm">
+
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="Enter your full name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="Enter your phone number"
+                        pattern="[0-9]{10}"
+                        maxlength="10"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        minlength="6"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        placeholder="Confirm your password"
+                        minlength="6"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="primary-btn">
+                    Sign Up
+                </button>
+
+            </form>
+
+            <p class="auth-footer">
+                Already have an account?
+                <a href="login.html">Login</a>
+            </p>
+
+            <p id="signupMessage" class="auth-message"></p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+        const signupForm = document.getElementById("signupForm");
+        const signupMessage = document.getElementById("signupMessage");
+
+        signupForm.addEventListener("submit", async function (event) {
+
+            event.preventDefault();
+
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            signupMessage.textContent = "";
+            signupMessage.style.color = "";
+
+            if (password !== confirmPassword) {
+                signupMessage.textContent = "Passwords do not match.";
+                signupMessage.style.color = "red";
+                return;
+            }
+
+            try {
+
+                const response = await fetch(
+                    "http://localhost:5000/api/auth/signup",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            name: name,
+                            email: email,
+                            password: password,
+                            phone: phone
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                if (data.success) {
+
+                    signupMessage.textContent = "Signup successful! Redirecting...";
+                    signupMessage.style.color = "green";
+
+                    signupForm.reset();
+
+                    setTimeout(() => {
+                        window.location.href = "login.html";
+                    }, 1000);
+
+                } else {
+
+                    signupMessage.textContent = data.message;
+                    signupMessage.style.color = "red";
+                }
+
+            } catch (error) {
+
+                console.error("Signup error:", error);
+
+                signupMessage.textContent =
+                    "Unable to connect to the server. Make sure the backend is running.";
+
+                signupMessage.style.color = "red";
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Protect Me Now</title>
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
+</head>
+
+<body class="sos-body">
+
+<div class="sos-screen">
+
+    <div class="sos-top">
+
+        <span id="currentTime">
+            10:01
+        </span>
+
+        <span>
+            ▮▮▮　⌁　▭
+        </span>
+
+    </div>
+
+
+    <h1>
+        Protect me now
+    </h1>
+
+
+    <div class="sos-image">
+        🫶🏻
+    </div>
+
+
+    <button
+        id="microphoneButton"
+        class="microphone-button"
+        type="button">
+
+        🎙
+
+    </button>
+
+
+    <p id="sosMessage">
+        Tap the button in an emergency
+    </p>
+
+</div>
+
+
+<script>
+
+const API_URL = "http://localhost:5000/api/sos";
+
+const microphoneButton =
+    document.getElementById("microphoneButton");
+
+const sosMessage =
+    document.getElementById("sosMessage");
+
+const currentTime =
+    document.getElementById("currentTime");
+
+
+/* ================================
+   CURRENT TIME
+================================ */
+
+function updateTime() {
+
+    const now = new Date();
+
+    currentTime.textContent =
+        now.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+}
+
+updateTime();
+
+setInterval(updateTime, 1000);
+
+
+/* ================================
+   SHOW MESSAGE
+================================ */
+
+function showSOSMessage(message, success = true) {
+
+    sosMessage.textContent = message;
+
+    sosMessage.style.color =
+        success ? "#ffffff" : "#ffb3b3";
+}
+
+
+/* ================================
+   GET LOGGED-IN USER
+================================ */
+
+function getUserId() {
+
+    const storedUser =
+        localStorage.getItem("user");
+
+    if (storedUser) {
+
+        try {
+
+            const user =
+                JSON.parse(storedUser);
+
+            if (user.id) {
+                return user.id;
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Error reading logged-in user:",
+                error
+            );
+        }
+    }
+
+    /*
+       Temporary fallback.
+
+       Once the user is logged in,
+       the actual user ID will be used.
+    */
+
+    return 1;
+}
+
+
+/* ================================
+   SEND SOS TO BACKEND
+================================ */
+
+async function sendSOS(latitude, longitude) {
+
+    const userId = getUserId();
+
+    try {
+
+        showSOSMessage(
+            "Location found. Sending SOS..."
+        );
+
+
+        const response = await fetch(
+            API_URL,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    userId: userId,
+
+                    latitude: latitude,
+
+                    longitude: longitude,
+
+                    message:
+                        "Emergency! I need help."
+
+                })
+            }
+        );
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "SOS backend response:",
+            data
+        );
+
+
+        if (response.ok && data.success) {
+
+            showSOSMessage(
+                "SOS alert sent successfully!"
+            );
+
+
+            console.log(
+                "SOS created:",
+                data.sos
+            );
+
+
+            /*
+               Keep button disabled after
+               successful emergency activation.
+            */
+
+            microphoneButton.disabled = true;
+
+        }
+
+        else {
+
+            showSOSMessage(
+                data.message ||
+                "Unable to send SOS alert.",
+                false
+            );
+
+
+            microphoneButton.disabled = false;
+
+            microphoneButton.style.opacity = "1";
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "SOS backend error:",
+            error
+        );
+
+
+        showSOSMessage(
+            "Unable to connect to the emergency server.",
+            false
+        );
+
+
+        microphoneButton.disabled = false;
+
+        microphoneButton.style.opacity = "1";
+    }
+}
+
+
+/* ================================
+   GET CURRENT LOCATION
+================================ */
+
+function getCurrentLocation() {
+
+    if (!navigator.geolocation) {
+
+        showSOSMessage(
+            "Geolocation is not supported by this browser.",
+            false
+        );
+
+        microphoneButton.disabled = false;
+
+        microphoneButton.style.opacity = "1";
+
+        return;
+    }
+
+
+    showSOSMessage(
+        "Getting your location..."
+    );
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const latitude =
+                position.coords.latitude;
+
+            const longitude =
+                position.coords.longitude;
+
+
+            console.log(
+                "Latitude:",
+                latitude
+            );
+
+
+            console.log(
+                "Longitude:",
+                longitude
+            );
+
+
+            showSOSMessage(
+                "Location found. Sending SOS..."
+            );
+
+
+            sendSOS(
+                latitude,
+                longitude
+            );
+
+        },
+
+
+        function(error) {
+
+            console.error(
+                "Geolocation error:",
+                error
+            );
+
+
+            let errorMessage =
+                "Unable to get your location.";
+
+
+            if (error.code === 1) {
+
+                errorMessage =
+                    "Location permission was denied.";
+
+            }
+
+            else if (error.code === 2) {
+
+                errorMessage =
+                    "Your location is currently unavailable.";
+
+            }
+
+            else if (error.code === 3) {
+
+                errorMessage =
+                    "Location request timed out.";
+
+            }
+
+
+            showSOSMessage(
+                errorMessage,
+                false
+            );
+
+
+            microphoneButton.disabled = false;
+
+            microphoneButton.style.opacity = "1";
+
+        },
+
+
+        {
+            enableHighAccuracy: true,
+
+            timeout: 10000,
+
+            maximumAge: 0
+        }
+    );
+}
+
+
+/* ================================
+   SOS BUTTON
+================================ */
+
+microphoneButton.addEventListener(
+    "click",
+    function() {
+
+        /*
+           Prevent multiple SOS requests.
+        */
+
+        microphoneButton.disabled = true;
+
+        microphoneButton.style.opacity = "0.6";
+
+
+        showSOSMessage(
+            "Emergency activated..."
+        );
+
+
+        getCurrentLocation();
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>

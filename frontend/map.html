@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Location</title>
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <header class="header">
+
+        <div class="location-section">
+
+            <p class="location-label">
+                Current location
+            </p>
+
+            <div class="location">
+                <span class="location-pin">●</span>
+                <span id="locationText">
+                    Getting location...
+                </span>
+            </div>
+
+        </div>
+
+        <div class="profile-avatar">
+            👩🏻
+        </div>
+
+    </header>
+
+
+    <main class="map-page">
+
+        <div class="map" id="map">
+
+            <div class="park park-one"></div>
+
+            <div class="park park-two"></div>
+
+
+            <!-- Mom marker -->
+
+            <div class="map-marker mom-marker">
+
+                <span>Mom</span>
+                <b>👩🏻</b>
+
+            </div>
+
+
+            <!-- Your real location -->
+
+            <div
+                class="map-marker you-marker"
+                id="youMarker">
+
+                <span>You</span>
+                <b>👩🏻</b>
+
+            </div>
+
+
+            <div class="map-controls">
+
+                <button
+                    type="button"
+                    id="locateButton">
+
+                    ⌖
+
+                </button>
+
+                <button
+                    type="button"
+                    id="centerButton">
+
+                    ⛶
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <nav class="bottom-navigation">
+
+        <button
+            class="nav-item"
+            onclick="goToPage('index.html')">
+
+            <span class="nav-icon">⌂</span>
+            <span>Home</span>
+
+        </button>
+
+
+        <button
+            class="nav-item"
+            onclick="goToPage('videos.html')">
+
+            <span class="nav-icon">▶</span>
+            <span>Videos</span>
+
+        </button>
+
+
+        <button
+            class="nav-item"
+            onclick="goToPage('contacts.html')">
+
+            <span class="nav-icon">☎</span>
+            <span>Contacts</span>
+
+        </button>
+
+
+        <button
+            class="nav-item active"
+            onclick="goToPage('settings.html')">
+
+            <span class="nav-icon">⚙</span>
+            <span>Settings</span>
+
+        </button>
+
+    </nav>
+
+</div>
+
+
+<script src="js/script.js"></script>
+
+
+<script>
+
+/* ==========================================
+   CONFIGURATION
+========================================== */
+
+const LOCATION_API =
+    "http://localhost:5000/api/location";
+
+
+const locationText =
+    document.getElementById("locationText");
+
+const youMarker =
+    document.getElementById("youMarker");
+
+const locateButton =
+    document.getElementById("locateButton");
+
+const centerButton =
+    document.getElementById("centerButton");
+
+
+/* ==========================================
+   GET USER ID
+========================================== */
+
+function getUserId() {
+
+    const storedUser =
+        localStorage.getItem("user");
+
+    if (storedUser) {
+
+        try {
+
+            const user =
+                JSON.parse(storedUser);
+
+            if (user.id) {
+                return user.id;
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Unable to read user:",
+                error
+            );
+
+        }
+
+    }
+
+    return 1;
+}
+
+
+/* ==========================================
+   SAVE LOCATION TO BACKEND
+========================================== */
+
+async function saveLocation(latitude, longitude) {
+
+    const userId = getUserId();
+
+    try {
+
+        const response = await fetch(
+            LOCATION_API,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    userId: userId,
+
+                    latitude: latitude,
+
+                    longitude: longitude
+
+                })
+            }
+        );
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "Location API response:",
+            data
+        );
+
+
+        if (!response.ok || !data.success) {
+
+            console.error(
+                "Location could not be saved:",
+                data.message
+            );
+
+            return;
+
+        }
+
+
+        console.log(
+            "Location saved successfully"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Location API error:",
+            error
+        );
+
+    }
+}
+
+
+/* ==========================================
+   GET CURRENT LOCATION
+========================================== */
+
+function getCurrentLocation() {
+
+    if (!navigator.geolocation) {
+
+        locationText.textContent =
+            "Location unavailable";
+
+        return;
+
+    }
+
+
+    locationText.textContent =
+        "Getting location...";
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(position) {
+
+            const latitude =
+                position.coords.latitude;
+
+            const longitude =
+                position.coords.longitude;
+
+
+            console.log(
+                "Current latitude:",
+                latitude
+            );
+
+
+            console.log(
+                "Current longitude:",
+                longitude
+            );
+
+
+            /*
+               Display coordinates.
+
+               Later we can convert these coordinates
+               into a real city/address using a geocoding API.
+            */
+
+            locationText.textContent =
+                `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+
+
+            /*
+               Save the location in backend.
+            */
+
+            saveLocation(
+                latitude,
+                longitude
+            );
+
+
+            /*
+               Move the You marker.
+
+               This is a visual representation for
+               the prototype. It does not represent
+               geographic map coordinates yet.
+            */
+
+            positionYouMarker(
+                latitude,
+                longitude
+            );
+
+        },
+
+
+        function(error) {
+
+            console.error(
+                "Geolocation error:",
+                error
+            );
+
+
+            if (error.code === 1) {
+
+                locationText.textContent =
+                    "Location permission denied";
+
+            }
+
+            else if (error.code === 2) {
+
+                locationText.textContent =
+                    "Location unavailable";
+
+            }
+
+            else if (error.code === 3) {
+
+                locationText.textContent =
+                    "Location request timed out";
+
+            }
+
+            else {
+
+                locationText.textContent =
+                    "Unable to get location";
+
+            }
+
+        },
+
+
+        {
+            enableHighAccuracy: true,
+
+            timeout: 10000,
+
+            maximumAge: 0
+
+        }
+
+    );
+
+}
+
+
+/* ==========================================
+   POSITION "YOU" MARKER
+========================================== */
+
+function positionYouMarker(
+    latitude,
+    longitude
+) {
+
+    /*
+       This converts the latitude/longitude
+       into a visual position inside our
+       stylized prototype map.
+
+       It is NOT a real geographic projection.
+    */
+
+
+    const latitudePart =
+        Math.abs(latitude % 1);
+
+    const longitudePart =
+        Math.abs(longitude % 1);
+
+
+    let left =
+        45 + (longitudePart * 10);
+
+
+    let top =
+        45 - (latitudePart * 10);
+
+
+    /*
+       Keep marker inside map boundaries.
+    */
+
+    left =
+        Math.max(
+            15,
+            Math.min(80, left)
+        );
+
+
+    top =
+        Math.max(
+            20,
+            Math.min(75, top)
+        );
+
+
+    youMarker.style.left =
+        `${left}%`;
+
+    youMarker.style.top =
+        `${top}%`;
+
+}
+
+
+/* ==========================================
+   LOCATE BUTTON
+========================================== */
+
+locateButton.addEventListener(
+    "click",
+    function() {
+
+        getCurrentLocation();
+
+    }
+);
+
+
+/* ==========================================
+   CENTER BUTTON
+========================================== */
+
+centerButton.addEventListener(
+    "click",
+    function() {
+
+        getCurrentLocation();
+
+        youMarker.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+    }
+);
+
+
+/* ==========================================
+   LOAD LOCATION WHEN PAGE OPENS
+========================================== */
+
+getCurrentLocation();
+
+</script>
+
+</body>
+
+</html>
